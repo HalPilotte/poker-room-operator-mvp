@@ -1,37 +1,44 @@
 # Poker Room Operator — MVP
 
-Monorepo scaffold for the Poker-Room-Operator MVP plan. Uses Kanban JSON files under `ops/kanban/` to track work across Backlog, In Progress, Testing, and Finished.
-
-> Note: This scaffold is stack-agnostic until the Development Stack file is confirmed. Replace placeholders once the stack is finalized.
+Monorepo for the Poker Room Operator MVP, designed to streamline development and operations.
 
 ## Structure
 
-- `apps/frontend/` — UI scaffold placeholder.
-- `services/api/` — API scaffold placeholder.
-- `infra/` — IaC and deployment scripts placeholder.
-- `ops/kanban/` — Kanban JSON: `Backlog.json`, `InProgress.json`, `Finished.json`.
-- `docs/` — Plans and specifications.
-- `scripts/` — Local dev and CI helper scripts.
+- `apps/frontend/` — Next.js admin console.
+- `apps/mobile/` — React Native staff/player app.
+- `services/api/` — NestJS API backend.
+- `services/realtime/` — Socket.IO hub.
+- `infra/` — Terraform + AWS IaC.
+- `docs/` — Specifications and plans.
+- `.github/workflows/` — CI/CD pipelines.
 
 ## Kanban Workflow
 
-1. Create ticket in `Backlog.json`.
-2. Move to `InProgress.json` and set `status` to "In Progress" when work starts.
-3. Set `status` to "Testing" once initial tests pass.
-4. Move to `Finished.json` with `status` "Finished" when complete.
-5. If blocked, keep in `InProgress.json`, set `status` to "Blocked", and add `error` details.
+This project uses GitHub Projects for task management:
 
-Timestamps are ISO 8601 UTC. PII must be masked.
+1. Create issues in the repository and apply appropriate labels.
+2. Link issues to the GitHub Project board.
+3. Move issues through columns: Backlog → In Progress → Testing → Done.
+4. Use labels to indicate blocked or error states.
 
 ## Getting Started
 
-- Initialize Git:
+- Clone the repository:
 
   ```bash
-  git init
-  git add .
-  git commit -m "chore: scaffold MVP repo"
+  git clone <repo-url>
   ```
 
-- Replace placeholders based on the confirmed Development Stack.
-- Optional: add GitHub Actions, Dockerfiles, and IaC once stack is set.
+- Install dependencies in the frontend, mobile, and api directories:
+
+  ```bash
+  pnpm install
+  ```
+
+- Start local infrastructure services:
+
+  ```bash
+  docker-compose up db redis
+  ```
+
+- CI/CD is handled via GitHub Actions configured in `.github/workflows/`.
