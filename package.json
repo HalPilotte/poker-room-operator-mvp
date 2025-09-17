@@ -1,0 +1,7 @@
+{
+  "name": "poker-room-operator-mvp",
+  "private": true,
+  "packageManager": "pnpm@10.16.1",
+  "engines": { "node": ">=20 <21" },
+  "workspaces": ["apps/*","services/*"]
+}
