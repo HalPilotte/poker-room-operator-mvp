@@ -1,3 +1,6 @@
+packages:
+  - 'apps/*'
+  - 'services/*'
 ignoredBuiltDependencies:
   - '@prisma/client'
   - prisma
