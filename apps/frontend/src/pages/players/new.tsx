@@ -4,32 +4,58 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { api } from '../../lib/api';
-import { Box, Button, Checkbox, FormControlLabel, MenuItem, TextField, Typography, Alert } from '@mui/material';
-import { useState } from 'react';
+import { Box, Checkbox, FormControlLabel, MenuItem, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
+import Field from '../../components/forms/Field';
+import FormBanner from '../../components/forms/FormBanner';
+import SubmitBar from '../../components/forms/SubmitBar';
+import ContentHeader from '../../components/layout/ContentHeader';
 
+// --- Validation schema ---
+// Name and DOB are required. Phone is optional. Notes and status optional.
 const schema = z.object({
-  name: z.string().min(1).max(80),
-  phone: z.string().min(7).max(20),
-  consent: z.boolean(),
-  notes: z.string().max(1000).optional().or(z.literal('').transform(() => undefined)),
+  name: z.string().min(1, 'Enter a name.').max(80),
+  dob: z.string().min(1, 'Enter a date of birth.'), // ISO date string from input[type=date]
+  phone: z.string().min(7, 'Enter at least 7 digits.').max(20).optional().or(z.literal('').transform(() => undefined)),
+  consent: z.boolean().optional().default(false),
+  notes: z.string().max(1000, 'Limit 1,000 characters.').optional().or(z.literal('').transform(() => undefined)),
   status: z.enum(['active', 'ban', 'hold']).default('active'),
-});
+}).refine((v) => {
+  // Soft age check: warn under 18, but do not block submit. We implement messaging in UI.
+  if (!v.dob) return true;
+  const age = Math.floor((Date.now() - new Date(v.dob).getTime()) / (365.25 * 24 * 3600 * 1000));
+  return age >= 0; // schema itself does not block <18
+}, { message: 'Enter a valid date of birth.' });
 
 type FormValues = z.infer<typeof schema>;
 
-export default function NewPlayerPage() {
+export default function NewPlayerPage({ snackbar }: any) {
   const [serverError, setServerError] = useState<string | null>(null);
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<FormValues>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { consent: false, status: 'active' },
+    mode: 'onBlur',
   });
+
+  const dob = watch('dob');
+  const under18 = useMemo(() => {
+    if (!dob) return false;
+    const age = Math.floor((Date.now() - new Date(dob).getTime()) / (365.25 * 24 * 3600 * 1000));
+    return age < 18;
+  }, [dob]);
 
   async function onSubmit(values: FormValues) {
     setServerError(null);
     try {
-      const created = await api<any>('/players', { method: 'POST', body: JSON.stringify(values) });
+      // Build payload: omit undefined/empty optional fields. Do NOT send dob yet if backend does not accept it.
+      const { name, phone, consent, notes, status } = values;
+      const payload: Record<string, any> = { name, consent: !!consent, status };
+      if (phone) payload.phone = phone;
+      if (notes) payload.notes = notes;
+
+      const created = await api<any>('/players', { method: 'POST', body: JSON.stringify(payload) });
       reset({ consent: false, status: 'active' });
-      alert(`Player created: ${created.name}`);
+      snackbar?.show?.(`Player created: ${created.name}`, 'success');
     } catch (e: any) {
       setServerError(e?.message ?? 'Request failed');
     }
@@ -37,10 +63,11 @@ export default function NewPlayerPage() {
 
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
-      <Typography variant="h5" gutterBottom>New Player</Typography>
-      {serverError && <Alert severity="error" sx={{ mb: 2 }}>{serverError}</Alert>}
+      <ContentHeader title="New Player" subtitle="Only name and date of birth are required. Phone is optional." />
+      {serverError && <FormBanner severity="error">{serverError}</FormBanner>}
 
-      <TextField
+      {/* Name */}
+      <Field
         label="Name"
         fullWidth
         margin="normal"
@@ -49,18 +76,33 @@ export default function NewPlayerPage() {
         helperText={errors.name?.message}
       />
 
-      <TextField
-        label="Phone"
+      {/* DOB */}
+      <Field
+        label="Date of Birth"
+        type="date"
+        InputLabelProps={{ shrink: true }}
+        fullWidth
+        margin="normal"
+        {...register('dob')}
+        error={!!errors.dob}
+        helperText={errors.dob?.message || (under18 ? 'Player appears under 18. Verify eligibility.' : ' ')}
+      />
+
+      {/* Phone (optional) */}
+      <Field
+        label="Phone (optional)"
         fullWidth
         margin="normal"
         {...register('phone')}
         error={!!errors.phone}
-        helperText={errors.phone?.message}
+        helperText={errors.phone?.message || 'Optional'}
       />
 
-      <FormControlLabel control={<Checkbox {...register('consent')} />} label="Marketing consent" />
+      {/* Consent */}
+      <FormControlLabel control={<Checkbox {...register('consent')} />} label="Agrees to marketing messages" />
 
-      <TextField
+      {/* Notes */}
+      <Field
         label="Notes"
         fullWidth
         multiline
@@ -71,15 +113,14 @@ export default function NewPlayerPage() {
         helperText={errors.notes?.message}
       />
 
-      <TextField select label="Status" fullWidth margin="normal" defaultValue="active" {...register('status')}>
+      {/* Status */}
+      <Field select label="Status" fullWidth margin="normal" defaultValue="active" {...register('status')}>
         <MenuItem value="active">Active</MenuItem>
         <MenuItem value="hold">Hold</MenuItem>
         <MenuItem value="ban">Ban</MenuItem>
-      </TextField>
+      </Field>
 
-      <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-        <Button type="submit" variant="contained" disabled={isSubmitting}>Create Player</Button>
-      </Box>
+      <SubmitBar loading={isSubmitting} label="Create Player" />
     </Box>
   );
 }
