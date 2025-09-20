@@ -62,7 +62,7 @@ async function loadConfig(path) {
   return JSON.parse(raw);
 }
 
-const PROJECTS_QUERY = `
+const ORG_PROJECTS_QUERY = `
   query ($login: String!, $after: String) {
     organization(login: $login) {
       projectsV2(first: 20, after: $after) {
@@ -78,6 +78,11 @@ const PROJECTS_QUERY = `
         }
       }
     }
+  }
+`;
+
+const USER_PROJECTS_QUERY = `
+  query ($login: String!, $after: String) {
     user(login: $login) {
       projectsV2(first: 20, after: $after) {
         nodes {
@@ -95,21 +100,41 @@ const PROJECTS_QUERY = `
   }
 `;
 
-async function getProjectsV2(login) {
+async function paginateProjects(query, key, login) {
   const nodes = [];
   let after = null;
+  let sawContainer = false;
 
   while (true) {
-    const data = await gh(PROJECTS_QUERY, { login, after });
-    const container = data.organization ?? data.user;
+    const data = await gh(query, { login, after });
+    const container = data[key];
     if (!container) break;
+    sawContainer = true;
 
-    nodes.push(...(container.projectsV2.nodes || []));
-    if (!container.projectsV2.pageInfo.hasNextPage) break;
-    after = container.projectsV2.pageInfo.endCursor;
+    const page = container.projectsV2;
+    nodes.push(...(page?.nodes || []));
+    if (!page?.pageInfo?.hasNextPage) break;
+    after = page.pageInfo.endCursor;
   }
 
-  return nodes;
+  return sawContainer ? nodes : null;
+}
+
+function isMissingOrgError(error, login) {
+  if (!error || !error.errors) return false;
+  return error.errors.some((entry) => entry.message?.includes(`Could not resolve to an Organization with the login of '${login}'`));
+}
+
+async function getProjectsV2(login) {
+  try {
+    const nodes = await paginateProjects(ORG_PROJECTS_QUERY, 'organization', login);
+    if (nodes) return { nodes, scope: 'organization' };
+  } catch (error) {
+    if (!isMissingOrgError(error, login)) throw error;
+  }
+
+  const userNodes = await paginateProjects(USER_PROJECTS_QUERY, 'user', login);
+  return { nodes: userNodes || [], scope: 'user' };
 }
 
 async function findProjectId(projects, cfg) {
@@ -263,8 +288,8 @@ async function applyRules(cfg, projectId, items, statusField) {
   endStep();
 
   logStep('Fetch projects');
-  const projects = await getProjectsV2(owner);
-  console.log(projects.map((project) => ({ number: project.number, title: project.title, id: project.id, closed: project.closed })));
+  const { nodes: projects, scope } = await getProjectsV2(owner);
+  console.log({ scope, projects: projects.map((project) => ({ number: project.number, title: project.title, id: project.id, closed: project.closed })) });
   const projectId = await findProjectId(projects, config);
   if (!projectId) {
     console.error('No project found matching config.project.name.');
