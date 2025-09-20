@@ -1,8 +1,8 @@
 {
   "version": "1",
   "project": {
-    "slug": "halpilotte-pokerroomoperator-board",
-    "name": "@HalPilotte's PokerRoomOperator Board"
+    "slug": "pokerroomoperator",
+    "name": "PokerRoomOperator"
   },
   "mappings": {
     "statusField": "Status",
