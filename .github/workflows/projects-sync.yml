@@ -1,0 +1,49 @@
+name: Projects Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: 'Apply changes (true) or dry-run (false)'
+        required: true
+        default: 'false'
+  schedule:
+    - cron: '0 7 * * *'
+
+permissions:
+  contents: read
+  projects: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        working-directory: scripts/projects-sync
+        run: npm ci
+
+      - name: Run sync (dry-run)
+        if: ${{ inputs.apply != 'true' }}
+        working-directory: scripts/projects-sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name || github.repository }}
+        run: node index.mjs --config ops/workflows/projects/kanban.v1.json --dry-run
+
+      - name: Run sync (apply)
+        if: ${{ inputs.apply == 'true' }}
+        working-directory: scripts/projects-sync
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name || github.repository }}
+        run: node index.mjs --config ops/workflows/projects/kanban.v1.json

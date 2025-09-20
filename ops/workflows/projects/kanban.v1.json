@@ -1,0 +1,96 @@
+{
+  "version": "1",
+  "project": {
+    "slug": "poker-room-operator-ops",
+    "name": "Poker Room Operator — Ops"
+  },
+  "mappings": {
+    "statusField": "Status",
+    "parentRelation": "subissue_of"
+  },
+  "issueTypes": [
+    "epic",
+    "feature",
+    "task",
+    "bug",
+    "subissue"
+  ],
+  "states": [
+    { "key": "no_status", "name": "No Status", "category": "todo" },
+    { "key": "todo", "name": "To Do", "category": "todo", "wipLimit": 999 },
+    { "key": "in_progress", "name": "In Progress", "category": "in_progress", "wipLimit": 6 },
+    { "key": "blocked", "name": "Blocked", "category": "blocked" },
+    { "key": "review", "name": "In Review", "category": "in_progress" },
+    { "key": "done", "name": "Done", "category": "done" }
+  ],
+  "transitions": [
+    { "from": ["no_status", "todo"], "to": "in_progress" },
+    { "from": ["in_progress"], "to": "review" },
+    { "from": ["review"], "to": "done" },
+    { "from": ["in_progress", "review"], "to": "blocked" },
+    { "from": ["blocked"], "to": "in_progress" },
+    { "from": ["any"], "to": "todo" }
+  ],
+  "labels": [
+    "severity:sev-1",
+    "severity:sev-2",
+    "type:ops",
+    "parent:#",
+    "ticket:POKER-123",
+    "ticket:OPS-3"
+  ],
+  "views": [
+    {
+      "name": "Parents only",
+      "groupBy": "status",
+      "fields": ["Title", "Assignees", "Status", "Parent"],
+      "sort": ["-updated"],
+      "filter": "-is:subissue"
+    },
+    {
+      "name": "Parent with No Status",
+      "groupBy": "status",
+      "fields": ["Title", "Assignees", "Status", "Parent"],
+      "sort": ["-updated"],
+      "filter": "status:\"No Status\" -is:subissue"
+    },
+    {
+      "name": "All by Parent",
+      "groupBy": "parent",
+      "fields": ["Title", "Assignees", "Status", "Parent"],
+      "sort": ["-updated"],
+      "filter": ""
+    }
+  ],
+  "swimlanes": [
+    { "key": "sev1", "name": "Sev-1", "query": "label:severity:sev-1" },
+    { "key": "default", "name": "Default", "query": "-label:severity:sev-1" }
+  ],
+  "rules": [
+    {
+      "name": "Subissues leave No Status",
+      "if": { "query": "is:subissue status:\"No Status\"" },
+      "then": { "set": { "Status": "To Do" } }
+    },
+    {
+      "name": "Blocker label on Blocked",
+      "if": { "query": "status:Blocked" },
+      "then": { "addLabel": "blocked" }
+    },
+    {
+      "name": "Done cascades to children (advisory)",
+      "if": { "query": "-is:subissue child-of:ANY status:Done" },
+      "then": { "set": { "children.Status": "Done" } }
+    }
+  ],
+  "metadata": {
+    "owner": "Bob",
+    "reviewers": ["Lyra", "Quinn", "Hermes"],
+    "ticket": "OPS-3",
+    "last_verified": "2025-09-20",
+    "notes": [
+      "Filters use GitHub Projects syntax (e.g., -is:subissue).",
+      "Rules express intended automation; apply via GitHub Actions or manual bulk edits if native rules are insufficient."
+    ]
+  }
+}

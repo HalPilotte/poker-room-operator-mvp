@@ -1,0 +1,14 @@
+{
+  "name": "projects-sync",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node index.mjs",
+    "lint": "node --check index.mjs"
+  },
+  "dependencies": {
+    "@octokit/graphql": "^7.0.2",
+    "undici": "^6.19.8"
+  }
+}
