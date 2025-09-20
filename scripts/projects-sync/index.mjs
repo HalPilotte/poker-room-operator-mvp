@@ -1,4 +1,5 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { dirname } from 'node:path';
 import { graphql } from '@octokit/graphql';
 
 const args = process.argv.slice(2);
@@ -21,6 +22,7 @@ function getArg(name, fallback) {
 const CONFIG_PATH = getArg('config', 'ops/workflows/projects/kanban.v1.json');
 const DRY_RUN_FLAG = getArg('dry-run', false);
 const DRY_RUN = DRY_RUN_FLAG === true || DRY_RUN_FLAG === 'true';
+const OUTPUT_PATH = getArg('output', undefined);
 
 const token = process.env.GH_PROJECTS_TOKEN || process.env.GITHUB_TOKEN;
 if (!token) {
@@ -168,6 +170,21 @@ const LIST_ITEMS_QUERY = `
                 }
               }
             }
+            fieldValues(first: 20) {
+              nodes {
+                __typename
+                ... on ProjectV2ItemFieldSingleSelectValue {
+                  name
+                  field {
+                    __typename
+                    ... on ProjectV2SingleSelectField {
+                      id
+                      name
+                    }
+                  }
+                }
+              }
+            }
           }
           pageInfo {
             hasNextPage
@@ -291,6 +308,53 @@ async function applyRules(cfg, projectId, items, statusField) {
   }
 }
 
+function extractStatus(item, statusField) {
+  if (!statusField) return undefined;
+  const values = item.fieldValues?.nodes || [];
+  for (const node of values) {
+    if (node?.__typename !== 'ProjectV2ItemFieldSingleSelectValue') continue;
+    const field = node.field;
+    if (field?.__typename !== 'ProjectV2SingleSelectField') continue;
+    if (field.id === statusField.id) return node.name || null;
+  }
+  return undefined;
+}
+
+async function writeSummary(outputPath, config, projectScope, statusField, items) {
+  const summary = {
+    generatedAt: new Date().toISOString(),
+    project: {
+      name: config.project?.name,
+      slug: config.project?.slug,
+      scope: projectScope,
+      statusField: statusField ? { id: statusField.id, name: statusField.name } : null,
+    },
+    totals: {
+      items: items.length,
+    },
+    items: items.map((item) => {
+      const issue = item.content;
+      const status = extractStatus(item, statusField) || null;
+      return {
+        projectItemId: item.id,
+        type: item.type,
+        status,
+        issue: issue
+          ? {
+              id: issue.id,
+              number: issue.number,
+              title: issue.title,
+              labels: (issue.labels?.nodes || []).map((label) => label.name).sort(),
+            }
+          : null,
+      };
+    }),
+  };
+
+  await mkdir(dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, `${JSON.stringify(summary, null, 2)}\n`, 'utf8');
+}
+
 (async function main() {
   logStep('Load config');
   const config = await loadConfig(CONFIG_PATH);
@@ -326,6 +390,13 @@ async function applyRules(cfg, projectId, items, statusField) {
   logStep(DRY_RUN ? 'Apply rules (dry-run)' : 'Apply rules');
   await applyRules(config, projectId, items, statusField);
   endStep();
+
+  if (OUTPUT_PATH) {
+    logStep('Write summary');
+    await writeSummary(OUTPUT_PATH, config, scope, statusField, items);
+    console.log(`Summary written to ${OUTPUT_PATH}`);
+    endStep();
+  }
 
   console.log('Done.');
 })().catch((error) => {

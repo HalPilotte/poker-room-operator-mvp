@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ env.GH_PROJECTS_TOKEN }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -38,7 +40,7 @@ jobs:
           GITHUB_TOKEN: ${{ env.GH_PROJECTS_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name || github.repository }}
-        run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json --dry-run
+        run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json --dry-run --output ops/workflows/projects/kanban.latest.json
 
       - name: Run sync (apply)
         if: ${{ inputs.apply == 'true' }}
@@ -47,4 +49,17 @@ jobs:
           GITHUB_TOKEN: ${{ env.GH_PROJECTS_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name || github.repository }}
-        run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json
+        run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json --output ops/workflows/projects/kanban.latest.json
+
+      - name: Commit snapshot
+        if: success()
+        run: |
+          if [ -n "$(git status --porcelain ops/workflows/projects/kanban.latest.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add ops/workflows/projects/kanban.latest.json
+            git commit -m "chore: update project snapshot"
+            git push
+          else
+            echo "No snapshot changes to commit"
+          fi
