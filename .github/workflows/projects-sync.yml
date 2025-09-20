@@ -27,23 +27,20 @@ jobs:
           node-version: '20'
 
       - name: Install deps
-        working-directory: scripts/projects-sync
-        run: npm ci
+        run: npm ci --prefix scripts/projects-sync
 
       - name: Run sync (dry-run)
         if: ${{ inputs.apply != 'true' }}
-        working-directory: scripts/projects-sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name || github.repository }}
-        run: node index.mjs --config ops/workflows/projects/kanban.v1.json --dry-run
+        run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json --dry-run
 
       - name: Run sync (apply)
         if: ${{ inputs.apply == 'true' }}
-        working-directory: scripts/projects-sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name || github.repository }}
-        run: node index.mjs --config ops/workflows/projects/kanban.v1.json
+        run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json
