@@ -22,7 +22,7 @@ const CONFIG_PATH = getArg('config', 'ops/workflows/projects/kanban.v1.json');
 const DRY_RUN_FLAG = getArg('dry-run', false);
 const DRY_RUN = DRY_RUN_FLAG === true || DRY_RUN_FLAG === 'true';
 
-const token = process.env.GITHUB_TOKEN;
+const token = process.env.GH_PROJECTS_TOKEN || process.env.GITHUB_TOKEN;
 if (!token) {
   console.error('GITHUB_TOKEN is required');
   process.exit(1);

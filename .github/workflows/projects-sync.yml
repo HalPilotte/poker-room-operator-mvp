@@ -17,6 +17,8 @@ permissions:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    env:
+      GH_PROJECTS_TOKEN: ${{ secrets.PROJECTS_TOKEN != '' && secrets.PROJECTS_TOKEN || secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,7 +34,8 @@ jobs:
       - name: Run sync (dry-run)
         if: ${{ inputs.apply != 'true' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PROJECTS_TOKEN: ${{ env.GH_PROJECTS_TOKEN }}
+          GITHUB_TOKEN: ${{ env.GH_PROJECTS_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name || github.repository }}
         run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json --dry-run
@@ -40,7 +43,8 @@ jobs:
       - name: Run sync (apply)
         if: ${{ inputs.apply == 'true' }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PROJECTS_TOKEN: ${{ env.GH_PROJECTS_TOKEN }}
+          GITHUB_TOKEN: ${{ env.GH_PROJECTS_TOKEN }}
           REPO_OWNER: ${{ github.repository_owner }}
           REPO_NAME: ${{ github.event.repository.name || github.repository }}
         run: node scripts/projects-sync/index.mjs --config ops/workflows/projects/kanban.v1.json
