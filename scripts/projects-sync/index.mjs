@@ -204,15 +204,21 @@ const SINGLE_SELECT_QUERY = `
       ... on ProjectV2 {
         fields(first: 100) {
           nodes {
-            ... on ProjectV2SingleSelectField {
+            __typename
+            ... on ProjectV2Field {
               id
               name
-              options {
-                id
-                name
+              dataType
+              configuration {
+                __typename
+                ... on ProjectV2SingleSelectFieldConfiguration {
+                  options {
+                    id
+                    name
+                  }
+                }
               }
             }
-            name
           }
         }
       }
@@ -223,7 +229,22 @@ const SINGLE_SELECT_QUERY = `
 async function getSingleSelectField(projectId, fieldName) {
   const data = await gh(SINGLE_SELECT_QUERY, { projectId });
   const fields = data.node?.fields?.nodes || [];
-  return fields.find((field) => field.name === fieldName);
+
+  const field = fields.find(
+    (entry) =>
+      entry?.name === fieldName &&
+      entry?.dataType === 'SINGLE_SELECT' &&
+      entry?.configuration?.__typename === 'ProjectV2SingleSelectFieldConfiguration'
+  );
+
+  if (!field) return undefined;
+
+  const options = field.configuration?.options || [];
+  return {
+    id: field.id,
+    name: field.name,
+    options,
+  };
 }
 
 const UPDATE_SINGLE_SELECT_MUTATION = `
