@@ -14,12 +14,14 @@ export class CreatePlayerDto {
   name!: string;
 
   // Using E.164 to keep input sane; if local numbers are needed, swap to regex validation.
+  @IsOptional()
   @IsString()
   @Length(7, 20)
-  phone!: string;
+  phone?: string;
 
   @IsBoolean()
-  consent!: boolean;
+  @IsOptional()
+  consent?: boolean;
 
   @IsOptional()
   @IsString()

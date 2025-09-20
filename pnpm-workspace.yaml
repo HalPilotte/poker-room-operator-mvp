@@ -1,6 +1,12 @@
 packages:
-  - 'apps/*'
-  - 'services/*'
+  - apps/*
+  - services/*
+
 ignoredBuiltDependencies:
   - '@prisma/client'
   - prisma
+
+onlyBuiltDependencies:
+  - core-js-pure
+  - esbuild
+  - sharp

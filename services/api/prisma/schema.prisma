@@ -11,10 +11,10 @@ generator client {
 model Player {
   id        String   @id @default(uuid())
   name      String
-  phone     String   @unique
-  consent   Boolean
+  phone     String?  @unique
+  consent   Boolean  @default(false)
   notes     String?
-  status    String   // active/ban/hold
+  status    String   @default("active") // active/ban/hold
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

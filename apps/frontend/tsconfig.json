@@ -17,8 +17,9 @@
     "jsx": "preserve",
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
-    "incremental": true,
-    "esModuleInterop": true
+    "incremental": false,
+    "esModuleInterop": true,
+    "types": ["node"]
   },
   "include": [
     "next-env.d.ts",

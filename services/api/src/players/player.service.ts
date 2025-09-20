@@ -10,9 +10,17 @@ export type PlayerStatus = 'active' | 'ban' | 'hold';
 export class PlayerService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: { name: string; phone: string; consent: boolean; notes?: string; status?: PlayerStatus }) {
+  async create(data: { name: string; phone?: string; consent?: boolean; notes?: string; status?: PlayerStatus }) {
     try {
-      return await this.prisma.player.create({ data: { ...data, status: data.status ?? 'active' } });
+      const payload: Prisma.PlayerCreateInput = {
+        name: data.name,
+        consent: data.consent ?? false,
+        status: data.status ?? 'active',
+      };
+      if (data.phone) payload.phone = data.phone;
+      if (data.notes !== undefined) payload.notes = data.notes;
+
+      return await this.prisma.player.create({ data: payload });
     } catch (e: any) {
       if (e.code === 'P2002' && e.meta?.target?.includes('phone')) {
         throw new ConflictException('phone already exists');

@@ -1,0 +1,22 @@
+Title,Description,Labels
+[Issue #3] Ava — PRD and Acceptance Criteria for Player Create,"Owner: Ava (Product Manager)
+Scope: Draft PRD and DoD for /players/new. Define success metrics, dedupe rules, consent/PII handling, and non-functional requirements. Deliver as markdown in repo.
+Acceptance: PRD approved by Security and Backend; linked to UX and API tickets.","Issue-3,MVP,owner:ava,area:product"
+[Issue #3] Pixel — UX for /players/new,"Owner: Pixel (Senior UX)
+Scope: Wireframes and annotated states for field groups, validation, duplicate detection UX, consent capture, and status messages. Provide Figma link and PNG exports.
+Acceptance: UX signed off by Product and Frontend; error/empty/loading states covered.","Issue-3,MVP,owner:pixel,area:ux"
+[Issue #3] Lyra — Frontend form implementation,"Owner: Lyra (Senior Frontend)
+Scope: Next.js page /players/new using React Hook Form + Zod. Client-side validation, masked inputs, error display. Integrate API when ready.
+Acceptance: Playwright E2E green; a11y checks pass; responsive layout.","Issue-3,MVP,owner:lyra,area:frontend"
+[Issue #3] Nova — POST /players API,"Owner: Nova (Senior Backend)
+Scope: NestJS endpoint POST /players. DTO validation, Prisma schema migration, idempotency keys, duplicate detection, standardized error schema, OpenAPI docs.
+Acceptance: Supertest contract tests; Swagger updated; 95% unit coverage for service layer.","Issue-3,MVP,owner:nova,area:backend"
+[Issue #3] Atlas — Data model and analytics alignment,"Owner: Atlas (Data)
+Scope: Align Player schema in analytics; ensure PII masking; define dedupe keys; add basic Metabase card for daily new players.
+Acceptance: ETL job green; dashboard shared; data dictionary updated.","Issue-3,MVP,owner:atlas,area:data"
+[Issue #3] Quinn — QA test matrix and E2E,"Owner: Quinn (QA)
+Scope: Test matrix for form validations, API contract, duplicate scenarios, PII masking. Implement Playwright E2E and Supertest smoke suite.
+Acceptance: CI job green; traceable test cases linked to tickets.","Issue-3,MVP,owner:quinn,area:qa"
+[Issue #3] Sable — Security & compliance review,"Owner: Sable (Security)
+Scope: Threat model for player onboarding; review PII storage, logging, retention. Validate WA compliance references; document RBAC/ABAC rules.
+Acceptance: Findings doc merged; no high-risk open items; agreed mitigations tracked.","Issue-3,MVP,owner:sable,area:security"
