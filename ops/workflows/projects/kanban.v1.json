@@ -2,7 +2,7 @@
   "version": "1",
   "project": {
     "slug": "poker-room-operator-ops",
-    "name": "Poker Room Operator — Ops"
+    "name": "PokerRoomOperator — Ops"
   },
   "mappings": {
     "statusField": "Status",
