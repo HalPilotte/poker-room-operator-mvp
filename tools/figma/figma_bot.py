@@ -3,19 +3,22 @@
 figma_bot.py
 
 Purpose:
-  CLI helper to export a Figma file's JSON using a PAT stored in AWS Secrets Manager.
+  CLI helper to export a Figma file's JSON using a PAT from environment (FIGMA_TOKEN/FIGMA_PAT),
+  or optionally from AWS Secrets Manager if no env token is provided.
 
 Usage:
   python tools/figma/figma_bot.py --file-id <FIGMA_FILE_ID> --output ./spec.json
 
 Environment:
-  AWS_REGION           – AWS region of the secret (e.g., us-west-2)
-  FIGMA_SECRET_NAME    – Secrets Manager name (default: figma/pat)
-  FIGMA_API_BASE       – Optional override (default: https://api.figma.com/v1)
+  FIGMA_PAT / FIGMA_TOKEN – Direct Figma token (preferred; bypasses AWS)
+  FIGMA_API_BASE         – Optional override (default: https://api.figma.com/v1)
+  AWS_REGION             – Optional when using Secrets Manager
+  FIGMA_SECRET_NAME      – Optional secret name (default: figma/pat)
 
 Notes:
+  - Prefers FIGMA_TOKEN/FIGMA_PAT if set; falls back to AWS only when not provided.
   - No secrets are printed or persisted.
-  - Exits non‑zero on error for CI compatibility.
+  - Exits non-zero on error for CI compatibility.
 """
 from __future__ import annotations
 
@@ -26,10 +29,16 @@ import sys
 from pathlib import Path
 from typing import Any, Dict
 
-import boto3
-from boto3.session import Session
-from botocore.exceptions import ClientError, NoCredentialsError
 import requests
+
+try:
+    from boto3.session import Session  # type: ignore
+    from botocore.exceptions import ClientError, NoCredentialsError  # type: ignore
+    _AWS_AVAILABLE = True
+except Exception:  # pragma: no cover
+    Session = None  # type: ignore
+    ClientError = NoCredentialsError = Exception  # type: ignore
+    _AWS_AVAILABLE = False
 
 DEFAULT_SECRET_NAME = "figma/pat"
 DEFAULT_API_BASE = "https://api.figma.com/v1"
@@ -41,13 +50,14 @@ def log(msg: str) -> None:
 
 
 def get_env(name: str, default: str | None = None) -> str | None:
-    val = os.getenv(name, default)
-    return val
+    return os.getenv(name, default)
 
 
-def get_figma_token(secret_name: str, region: str) -> str:
-    """Fetch Figma PAT from AWS Secrets Manager. Secret JSON must contain key `token`."""
+def get_figma_token_from_aws(secret_name: str, region: str) -> str:
+    if not _AWS_AVAILABLE:
+        raise RuntimeError("boto3/botocore not installed; provide FIGMA_TOKEN or install AWS libs")
     try:
+        assert Session is not None
         session = Session(region_name=region)
         client = session.client("secretsmanager")
         log(f"Retrieving secret '{secret_name}' from region '{region}'…")
@@ -58,17 +68,27 @@ def get_figma_token(secret_name: str, region: str) -> str:
         try:
             payload = json.loads(secret_str)
         except json.JSONDecodeError:
-            # Support plain-string secrets containing only the token
             payload = {"token": secret_str}
         token = payload.get("token")
         if not token:
             raise RuntimeError("Secret JSON must contain key 'token'")
         return token
-    except NoCredentialsError as e:
+    except NoCredentialsError as e:  # type: ignore
         raise RuntimeError("AWS credentials not available for Secrets Manager access") from e
-    except ClientError as e:
-        code = e.response.get("Error", {}).get("Code")
+    except ClientError as e:  # type: ignore
+        code = getattr(e, "response", {}).get("Error", {}).get("Code")
         raise RuntimeError(f"Failed to read secret '{secret_name}': {code}") from e
+
+
+def resolve_token(region: str | None, secret_name: str | None) -> str:
+    pat = get_env("FIGMA_PAT") or get_env("FIGMA_TOKEN")
+    if pat:
+        log("Using token from environment (FIGMA_PAT/FIGMA_TOKEN).")
+        return pat
+    if not region:
+        raise RuntimeError("FIGMA_TOKEN not set and AWS_REGION missing")
+    name = secret_name or DEFAULT_SECRET_NAME
+    return get_figma_token_from_aws(secret_name=name, region=region)
 
 
 def fetch_figma_file(file_key: str, token: str, api_base: str = DEFAULT_API_BASE) -> Dict[str, Any]:
@@ -104,27 +124,15 @@ def fetch_figma_file(file_key: str, token: str, api_base: str = DEFAULT_API_BASE
 
 
 def normalize(figma_json: Dict[str, Any]) -> Dict[str, Any]:
-    """Basic normalization to keep payload useful but compact.
-
-    Keeps top-level document, components, styles, and file metadata if present.
-    Falls back to returning original JSON when expected keys are missing.
-    """
     keys = ["name", "lastModified", "thumbnailUrl", "version"]
     out: Dict[str, Any] = {k: figma_json.get(k) for k in keys if k in figma_json}
-    doc = figma_json.get("document")
-    if doc is not None:
-        out["document"] = doc
-    comps = figma_json.get("components")
-    if comps is not None:
-        out["components"] = comps
-    styles = figma_json.get("styles")
-    if styles is not None:
-        out["styles"] = styles
-
-    # If we captured nothing meaningful, return original
-    if not out:
-        return figma_json
-    return out
+    if "document" in figma_json:
+        out["document"] = figma_json["document"]
+    if "components" in figma_json:
+        out["components"] = figma_json["components"]
+    if "styles" in figma_json:
+        out["styles"] = figma_json["styles"]
+    return out or figma_json
 
 
 def write_json(path: Path, data: Dict[str, Any]) -> None:
@@ -135,7 +143,7 @@ def write_json(path: Path, data: Dict[str, Any]) -> None:
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Export a Figma file JSON using PAT from AWS Secrets Manager")
+    p = argparse.ArgumentParser(description="Export a Figma file JSON using PAT or AWS Secret")
     p.add_argument("--file-id", required=True, help="Figma file key from the URL")
     p.add_argument("--output", default="./figma_file.json", help="Output JSON path")
     p.add_argument("--raw", action="store_true", help="Write raw Figma response without normalization")
@@ -146,24 +154,20 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv or sys.argv[1:])
 
     region = get_env("AWS_REGION")
-    if not region:
-        log("ERROR: AWS_REGION is required")
-        return 2
-
     secret_name = get_env("FIGMA_SECRET_NAME", DEFAULT_SECRET_NAME) or DEFAULT_SECRET_NAME
     api_base = get_env("FIGMA_API_BASE", DEFAULT_API_BASE) or DEFAULT_API_BASE
 
     try:
-        token = get_figma_token(secret_name=secret_name, region=region)
+        token = resolve_token(region=region, secret_name=secret_name)
+    except Exception as e:
+        log(f"ERROR: {e}")
+        return 2
+
+    try:
+        raw = fetch_figma_file(file_key=args.file_id, token=token, api_base=api_base)
     except Exception as e:
         log(f"ERROR: {e}")
         return 3
-
-    try:
-        raw = fetch_figma_file(file_key=args["file_id"] if isinstance(args, dict) else args.file_id, token=token, api_base=api_base)
-    except Exception as e:
-        log(f"ERROR: {e}")
-        return 4
 
     data = raw if args.raw else normalize(raw)
 
@@ -171,7 +175,7 @@ def main(argv: list[str] | None = None) -> int:
         write_json(Path(args.output), data)
     except Exception as e:
         log(f"ERROR: Failed to write output: {e}")
-        return 5
+        return 4
 
     log("Done")
     return 0

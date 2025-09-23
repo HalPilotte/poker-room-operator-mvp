@@ -4,34 +4,52 @@ on:
   workflow_dispatch:
     inputs:
       file_id:
-        description: 'Figma file key (https://www.figma.com/file/<FILE_ID>/...)'
-        required: true
-      apply:
-        description: 'Write artifacts instead of dry run (true|false)'
+        description: 'Optional override: Figma file key (https://www.figma.com/file/<FILE_ID>/...)'
         required: false
-        default: 'true'
+
+permissions:
+  contents: read
 
 jobs:
   export:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - run: pip install --upgrade pip && pip install -r tools/figma/requirements.txt
+      - name: Install deps
+        run: |
+          pip install --upgrade pip
+          if [ -f tools/figma/requirements.txt ]; then
+            pip install -r tools/figma/requirements.txt
+          else
+            pip install requests boto3
+          fi
 
       - name: Export Figma JSON
         env:
           FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
         run: |
           mkdir -p artifacts
-          python tools/figma/figma_bot.py --file-id "${{ inputs.file_id }}" --output ./artifacts/figma_spec.json
+          FILE_ID_INPUT='${{ inputs.file_id }}'
+          if [ -n "$FILE_ID_INPUT" ]; then
+            FILE_ID="$FILE_ID_INPUT"
+          else
+            FILE_ID='${{ vars.FIGMA_FILE_ID }}'
+          fi
+          if [ -z "$FILE_ID" ]; then
+            echo "ERROR: No file_id input and no vars.FIGMA_FILE_ID set. Configure one and retry." >&2
+            exit 2
+          fi
+          python tools/figma/figma_bot.py --file-id "$FILE_ID" --output ./artifacts/figma_spec.json
 
-      - uses: actions/upload-artifact@v4
-        if: ${{ inputs.apply == 'true' }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: figma-spec
           path: artifacts/figma_spec.json
