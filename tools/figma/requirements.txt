@@ -1,2 +1,29 @@
-boto3
-requests
+name: Export Figma Design Tokens
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Figma tooling deps
+        run: |
+          set -euo pipefail
+          pip install --upgrade pip
+          if [ -f tools/figma/requirements.txt ]; then
+            echo "Found tools/figma/requirements.txt"
+            cat tools/figma/requirements.txt
+            pip install -r tools/figma/requirements.txt
+          else
+            echo "requirements.txt missing; installing inline fallback"
+            pip install requests boto3
+          fi
+
+      - name: Run Figma export script
+        run: python tools/figma/export.py
