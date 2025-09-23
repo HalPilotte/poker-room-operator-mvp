@@ -1,0 +1,37 @@
+name: Figma Export
+
+on:
+  workflow_dispatch:
+    inputs:
+      file_id:
+        description: 'Figma file key (https://www.figma.com/file/<FILE_ID>/...)'
+        required: true
+      apply:
+        description: 'Write artifacts instead of dry run (true|false)'
+        required: false
+        default: 'true'
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install --upgrade pip && pip install -r tools/figma/requirements.txt
+
+      - name: Export Figma JSON
+        env:
+          FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
+        run: |
+          mkdir -p artifacts
+          python tools/figma/figma_bot.py --file-id "${{ inputs.file_id }}" --output ./artifacts/figma_spec.json
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.apply == 'true' }}
+        with:
+          name: figma-spec
+          path: artifacts/figma_spec.json
