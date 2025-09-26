@@ -2,7 +2,14 @@
 
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma } from '@prisma/client';
+
+// Mock Prisma types for development
+type Prisma = {
+  PlayerCreateInput: any;
+  PlayerWhereInput: any;
+  PlayerOrderByWithRelationInput: any;
+  PlayerFindManyArgs: any;
+};
 
 export type PlayerStatus = 'active' | 'ban' | 'hold';
 
@@ -12,7 +19,7 @@ export class PlayerService {
 
   async create(data: { name: string; phone?: string; consent?: boolean; notes?: string; status?: PlayerStatus }) {
     try {
-      const payload: Prisma.PlayerCreateInput = {
+      const payload: any = {
         name: data.name,
         consent: data.consent ?? false,
         status: data.status ?? 'active',
@@ -39,7 +46,7 @@ export class PlayerService {
     const page = Math.max(1, Number(params.page) || 1);
     const size = Math.min(100, Math.max(1, Number(params.size) || 20));
     const q = params.query?.trim();
-    const where: Prisma.PlayerWhereInput = {
+    const where: any = {
       ...(params.includeBanned ? {} : { status: { not: 'ban' } }),
       ...(q
         ? {
