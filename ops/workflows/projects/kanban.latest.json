@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-09-26T22:26:57.139Z",
+  "generatedAt": "2025-09-27T06:25:38.034Z",
   "project": {
     "name": "PokerRoomOperator",
     "slug": "pokerroomoperator",
@@ -10,7 +10,144 @@
     }
   },
   "totals": {
-    "items": 0
+    "items": 8
   },
-  "items": []
+  "items": [
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW44",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMe26",
+        "number": 21,
+        "title": "Feature-flag hooks",
+        "labels": [
+          "adr-001",
+          "adr-001; module:admin; type:backend",
+          "backlog",
+          "module:admin",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW5s",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMe2v",
+        "number": 20,
+        "title": "Audit views + export",
+        "labels": [
+          "adr-001",
+          "adr-001; module:admin; type:ui",
+          "backlog",
+          "module:admin",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW6M",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMMEe",
+        "number": 18,
+        "title": "Admin shell + RBAC wiring",
+        "labels": [
+          "adr-001",
+          "adr-001; module:admin; type:feature",
+          "backlog",
+          "module:admin",
+          "type:feature"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW6Q",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMe2g",
+        "number": 19,
+        "title": "Config schema and versioning",
+        "labels": [
+          "adr-001",
+          "adr-001; module:admin; type:backend",
+          "backlog",
+          "module:admin",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOh9M",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMnSr",
+        "number": 22,
+        "title": "Dashboard shell + layout",
+        "labels": [
+          "adr-002",
+          "adr-002; module:command-center; type:ui",
+          "backlog",
+          "module:command-center",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOh9Q",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMnTM",
+        "number": 23,
+        "title": "Search API + FTS indexes",
+        "labels": [
+          "adr-002",
+          "adr-002; module:command-center; type:backend",
+          "backlog",
+          "module:command-center",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOh9U",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMnT1",
+        "number": 24,
+        "title": "High Hand controller widget",
+        "labels": [
+          "adr-002",
+          "adr-002; module:command-center; type:ui",
+          "backlog",
+          "module:command-center",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOh9Y",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMnUe",
+        "number": 25,
+        "title": "Comp wallet integration",
+        "labels": [
+          "adr-002",
+          "adr-002; module:command-center; type:backend",
+          "backlog",
+          "module:command-center",
+          "type:backend"
+        ]
+      }
+    }
+  ]
 }
