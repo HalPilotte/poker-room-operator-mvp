@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-09-27T07:11:46.256Z",
+  "generatedAt": "2025-09-27T07:36:37.063Z",
   "project": {
     "name": "PokerRoomOperator",
     "slug": "pokerroomoperator",
@@ -10,7 +10,7 @@
     }
   },
   "totals": {
-    "items": 12
+    "items": 16
   },
   "items": [
     {
@@ -213,6 +213,74 @@
           "adr-003; module:sessions; type:backend",
           "backlog",
           "module:sessions",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOkB0",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOeXK",
+        "number": 30,
+        "title": "Waitlist schema + API",
+        "labels": [
+          "adr-004",
+          "adr-004; module:waitlists; type:backend",
+          "backlog",
+          "module:waitlists",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOkB4",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOeXZ",
+        "number": 31,
+        "title": "Real-time waitlist updates",
+        "labels": [
+          "adr-004",
+          "adr-004; module:waitlists; type:backend",
+          "backlog",
+          "module:waitlists",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOkB8",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOeXt",
+        "number": 32,
+        "title": "Waitlist admin UI",
+        "labels": [
+          "adr-004",
+          "adr-004; module:waitlists; type:ui",
+          "backlog",
+          "module:waitlists",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOkCA",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOeYN",
+        "number": 33,
+        "title": "Seat assignment integration",
+        "labels": [
+          "adr-004",
+          "adr-004; module:waitlists; type:backend",
+          "backlog",
+          "module:waitlists",
           "type:backend"
         ]
       }
