@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-09-27T06:44:48.338Z",
+  "generatedAt": "2025-09-27T07:09:09.044Z",
   "project": {
     "name": "PokerRoomOperator",
     "slug": "pokerroomoperator",
@@ -10,7 +10,7 @@
     }
   },
   "totals": {
-    "items": 8
+    "items": 12
   },
   "items": [
     {
@@ -145,6 +145,74 @@
           "adr-002; module:command-center; type:backend",
           "backlog",
           "module:command-center",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOjjY",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOY71",
+        "number": 26,
+        "title": "Player session schema + API",
+        "labels": [
+          "adr-003",
+          "adr-003; module:sessions; type:backend",
+          "backlog",
+          "module:sessions",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOjjc",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOY8B",
+        "number": 27,
+        "title": "Real-time session updates",
+        "labels": [
+          "adr-003",
+          "adr-003; module:sessions; type:backend",
+          "backlog",
+          "module:sessions",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOjjg",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOY8Y",
+        "number": 28,
+        "title": "Session audit UI",
+        "labels": [
+          "adr-003",
+          "adr-003; module:sessions; type:ui",
+          "backlog",
+          "module:sessions",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOjjo",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOY8r",
+        "number": 29,
+        "title": "Comp wallet session hooks",
+        "labels": [
+          "adr-003",
+          "adr-003; module:sessions; type:backend",
+          "backlog",
+          "module:sessions",
           "type:backend"
         ]
       }
