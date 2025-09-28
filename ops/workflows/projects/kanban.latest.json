@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2025-09-27T07:36:37.063Z",
+  "generatedAt": "2025-09-28T07:12:11.287Z",
   "project": {
     "name": "PokerRoomOperator",
     "slug": "pokerroomoperator",
@@ -10,47 +10,13 @@
     }
   },
   "totals": {
-    "items": 16
+    "items": 45
   },
   "items": [
     {
-      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW44",
-      "type": "ISSUE",
-      "status": "Backlog",
-      "issue": {
-        "id": "I_kwDOPxQxqc7OMe26",
-        "number": 21,
-        "title": "Feature-flag hooks",
-        "labels": [
-          "adr-001",
-          "adr-001; module:admin; type:backend",
-          "backlog",
-          "module:admin",
-          "type:backend"
-        ]
-      }
-    },
-    {
-      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW5s",
-      "type": "ISSUE",
-      "status": "Backlog",
-      "issue": {
-        "id": "I_kwDOPxQxqc7OMe2v",
-        "number": 20,
-        "title": "Audit views + export",
-        "labels": [
-          "adr-001",
-          "adr-001; module:admin; type:ui",
-          "backlog",
-          "module:admin",
-          "type:ui"
-        ]
-      }
-    },
-    {
       "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW6M",
       "type": "ISSUE",
-      "status": "Backlog",
+      "status": "In Progress",
       "issue": {
         "id": "I_kwDOPxQxqc7OMMEe",
         "number": 18,
@@ -67,11 +33,45 @@
     {
       "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW6Q",
       "type": "ISSUE",
-      "status": "Backlog",
+      "status": "In Progress",
       "issue": {
         "id": "I_kwDOPxQxqc7OMe2g",
         "number": 19,
         "title": "Config schema and versioning",
+        "labels": [
+          "adr-001",
+          "adr-001; module:admin; type:backend",
+          "backlog",
+          "module:admin",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW5s",
+      "type": "ISSUE",
+      "status": "In Progress",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMe2v",
+        "number": 20,
+        "title": "Audit views + export",
+        "labels": [
+          "adr-001",
+          "adr-001; module:admin; type:ui",
+          "backlog",
+          "module:admin",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOW44",
+      "type": "ISSUE",
+      "status": "In Progress",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OMe26",
+        "number": 21,
+        "title": "Feature-flag hooks",
         "labels": [
           "adr-001",
           "adr-001; module:admin; type:backend",
@@ -282,6 +282,463 @@
           "backlog",
           "module:waitlists",
           "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlJs",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOnxP",
+        "number": 35,
+        "title": "Table schema + API",
+        "labels": [
+          "adr-005",
+          "adr-005; module:tables; type:backend",
+          "backlog",
+          "module:tables",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlJw",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOnxr",
+        "number": 36,
+        "title": "Real-time table state updates",
+        "labels": [
+          "adr-005",
+          "adr-005; module:tables; type:backend",
+          "backlog",
+          "module:tables",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlJ0",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOnyB",
+        "number": 37,
+        "title": "Table admin UI",
+        "labels": [
+          "adr-005",
+          "adr-005; module:tables; type:ui",
+          "backlog",
+          "module:tables",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlJ4",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOnyQ",
+        "number": 38,
+        "title": "Session-table integration",
+        "labels": [
+          "adr-005",
+          "adr-005; module:tables; type:backend",
+          "backlog",
+          "module:tables",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKA",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOny2",
+        "number": 39,
+        "title": "Comp ledger schema + API",
+        "labels": [
+          "adr-006",
+          "adr-006; module:comp; type:backend",
+          "backlog",
+          "module:comp",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKE",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOnzI",
+        "number": 40,
+        "title": "Comp posting service",
+        "labels": [
+          "adr-006",
+          "adr-006; module:comp; type:backend",
+          "backlog",
+          "module:comp",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKI",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOnzZ",
+        "number": 41,
+        "title": "Comp admin UI",
+        "labels": [
+          "adr-006",
+          "adr-006; module:comp; type:ui",
+          "backlog",
+          "module:comp",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKM",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOnzq",
+        "number": 42,
+        "title": "Reporting integration",
+        "labels": [
+          "adr-006",
+          "adr-006; module:comp; type:backend",
+          "backlog",
+          "module:comp",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKU",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn0L",
+        "number": 43,
+        "title": "Reporting schema + API",
+        "labels": [
+          "adr-007",
+          "adr-007; module:reporting; type:backend",
+          "backlog",
+          "module:reporting",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKY",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn0b",
+        "number": 44,
+        "title": "ETL jobs for sessions/waitlists/tables/comps",
+        "labels": [
+          "adr-007",
+          "adr-007; module:reporting; type:backend",
+          "backlog",
+          "module:reporting",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKc",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn0q",
+        "number": 45,
+        "title": "Reporting dashboard UI",
+        "labels": [
+          "adr-007",
+          "adr-007; module:reporting; type:ui",
+          "backlog",
+          "module:reporting",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKg",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn1A",
+        "number": 46,
+        "title": "Export service integration",
+        "labels": [
+          "adr-007",
+          "adr-007; module:reporting; type:backend",
+          "backlog",
+          "module:reporting",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKk",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn1g",
+        "number": 47,
+        "title": "Auth service + JWT issuance",
+        "labels": [
+          "adr-008",
+          "adr-008; module:auth; type:backend",
+          "backlog",
+          "module:auth",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKo",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn1z",
+        "number": 48,
+        "title": "RBAC/ABAC middleware",
+        "labels": [
+          "adr-008",
+          "adr-008; module:auth; type:backend",
+          "backlog",
+          "module:auth",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlKw",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn2K",
+        "number": 49,
+        "title": "Auth admin UI",
+        "labels": [
+          "adr-008",
+          "adr-008; module:auth; type:ui",
+          "backlog",
+          "module:auth",
+          "type:ui"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlK0",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn2c",
+        "number": 50,
+        "title": "Audit + vault integration",
+        "labels": [
+          "adr-008",
+          "adr-008; module:auth; type:backend",
+          "backlog",
+          "module:auth",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlK4",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn3G",
+        "number": 51,
+        "title": "Observability stack setup",
+        "labels": [
+          "adr-009",
+          "adr-009; module:observability; type:infra",
+          "backlog",
+          "module:observability",
+          "type:infra"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlK8",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn3j",
+        "number": 52,
+        "title": "Alerting + runbooks",
+        "labels": [
+          "adr-009",
+          "adr-009; module:observability; type:ops",
+          "backlog",
+          "module:observability",
+          "type:ops"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlLA",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn4R",
+        "number": 53,
+        "title": "Audit log pipeline",
+        "labels": [
+          "adr-009",
+          "adr-009; module:observability; type:backend",
+          "backlog",
+          "module:observability",
+          "type:backend"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlLE",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOn4y",
+        "number": 54,
+        "title": "Incident response drill",
+        "labels": [
+          "adr-009",
+          "adr-009; module:observability; type:ops",
+          "backlog",
+          "module:observability",
+          "type:ops"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOlZs",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOqzl",
+        "number": 55,
+        "title": "ADR-001 Admin Module",
+        "labels": [
+          "adr-001"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOln8",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOs_Z",
+        "number": 56,
+        "title": "ADR-002 Command Center",
+        "labels": [
+          "adr-002"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOl94",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOvYT",
+        "number": 57,
+        "title": "ADR-003 Table Tablet",
+        "labels": [
+          "adr-003"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOmG0",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOwSH",
+        "number": 58,
+        "title": "ADR-004 Floor Tablet",
+        "labels": [
+          "adr-004"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOmQk",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOxbv",
+        "number": 59,
+        "title": "ADR-005 Service Tablet",
+        "labels": [
+          "adr-005"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOmXU",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOyTl",
+        "number": 60,
+        "title": "ADR-006 Kitchen Tablet",
+        "labels": [
+          "adr-006"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOmc4",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOy49",
+        "number": 61,
+        "title": "ADR-007 Player App",
+        "labels": [
+          "adr-007"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOmjE",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OOz7K",
+        "number": 62,
+        "title": "ADR-008 High Hand Screen",
+        "labels": [
+          "adr-008"
+        ]
+      }
+    },
+    {
+      "projectItemId": "PVTI_lAHOAhZYy84BDSqFzgfOmpc",
+      "type": "ISSUE",
+      "status": "Backlog",
+      "issue": {
+        "id": "I_kwDOPxQxqc7OO1h2",
+        "number": 63,
+        "title": "ADR-009 Tournament App",
+        "labels": [
+          "adr-009"
         ]
       }
     }
