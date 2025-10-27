@@ -8,6 +8,27 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model User {
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  firstName  String
+  lastName   String
+  role       Role     @default(PLAYER)
+  properties Property[] @relation("UserProperties")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  name        String
+  location    String
+  users       User[]   @relation("UserProperties")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 model Player {
   id        String   @id @default(uuid())
   name      String
@@ -17,4 +38,11 @@ model Player {
   status    String   @default("active") // active/ban/hold
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+  PLAYER
 }
