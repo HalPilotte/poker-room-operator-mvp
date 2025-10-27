@@ -7,6 +7,8 @@ ignoredBuiltDependencies:
   - prisma
 
 onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@prisma/engines'
   - core-js-pure
   - esbuild
   - sharp
